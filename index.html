@@ -11,13 +11,14 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="visHolder"></div>
+        <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
         <script type="text/javascript">
 
         const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';
@@ -44,6 +45,7 @@
             svg.append("text")
             .attr("x", w/2)
             .attr("y", padding/2)
+            .attr("id","title")
             .attr("text-anchor", "middle")
             .style("font-size", "30px")
             .text("Bar Charts Rock");
@@ -63,14 +65,16 @@
             const xAxis = d3.axisBottom(xScale)
             .ticks(5);
 
-            const yAxis = d3.axisLeft(yScale);
+            const yAxis = d3.axisLeft(yScale)
 
             svg.append("g")
             .attr("transform", "translate(" + padding + ", " + (padding) + ")")
+            .attr("id","y-axis")
             .call(yAxis)
 
             svg.append("g")
             .attr("transform", "translate(" + padding + "," + (h - padding) + ")")
+            .attr("id","x-axis")
             .call(xAxis);
 
             var Tooltip = d3.select("body")
@@ -84,19 +88,15 @@
                             .style("border-radius", "5px")
                             .style("padding", "5px")
 
-            var tooltip = d3
-                .select('.visHolder')
-                .append('div')
-                .attr('id', 'tooltip')
-                .style('opacity', 0);
-
             var mouseover = function(d) {
                 Tooltip
                 .style("opacity", 1)
+                .attr("data-date", d[0]);
                 d3.select(this)
                 .style("stroke", "black")
-                .style("opacity", 1)
-                console.log(d3.event.pageX)
+                
+
+                
             }
             var mousemove = function(d) {
 
@@ -124,6 +124,8 @@
                 .attr("height", (d, i) => h-yScale(d[1])-2*padding)
                 .attr("fill", "navy")
                 .attr("class", "bar")
+                .attr("data-date",(d) => d[0])
+                .attr("data-gdp",(d) => d[1])
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
