@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="visHolder"></div>
+        <script type="text/javascript">
+
+        const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';
+
+            const w = 1000;
+            const h = 500;
+            const padding = 60;
+
+        // get max and min dates - this assumes data is sorted
+
+            d3.json(url, function (error, data) {
+            if (error)
+                throw error;
+            
+            const dataset = data.data;
+
+            const svg = d3.select("body")
+            .append("svg")
+            .attr("id","SVG")
+            .attr("width", w)
+            .attr("height", h)
+            .style("border", "1px solid black");
+
+            svg.append("text")
+            .attr("x", w/2)
+            .attr("y", padding/2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "30px")
+            .text("Bar Charts Rock");
+
+            const yScale = d3.scaleLinear()
+            .domain([0, d3.max(dataset, (d) => d[1])])
+            .range([h-(2*padding),0]);
+
+            var minDate = new Date(dataset[0][0]),
+            maxDate = new Date(dataset[dataset.length-1][0]);
+            
+
+            const xScale = d3.scaleTime()
+            .domain([minDate, maxDate])
+            .range([0, w-2*padding]);
+
+            const xAxis = d3.axisBottom(xScale)
+            .ticks(5);
+
+            const yAxis = d3.axisLeft(yScale);
+
+            svg.append("g")
+            .attr("transform", "translate(" + padding + ", " + (padding) + ")")
+            .call(yAxis)
+
+            svg.append("g")
+            .attr("transform", "translate(" + padding + "," + (h - padding) + ")")
+            .call(xAxis);
+
+            var Tooltip = d3.select("body")
+                            .append("div")
+                            .style("opacity", 0)
+                            .attr("class", "tooltip")
+                            .attr("id","tooltip")
+                            .style("background-color", "white")
+                            .style("border", "solid")
+                            .style("border-width", "2px")
+                            .style("border-radius", "5px")
+                            .style("padding", "5px")
+
+            var tooltip = d3
+                .select('.visHolder')
+                .append('div')
+                .attr('id', 'tooltip')
+                .style('opacity', 0);
+
+            var mouseover = function(d) {
+                Tooltip
+                .style("opacity", 1)
+                d3.select(this)
+                .style("stroke", "black")
+                .style("opacity", 1)
+                console.log(d3.event.pageX)
+            }
+            var mousemove = function(d) {
+
+                Tooltip
+                .html(d[1])
+                .style("top", (d3.event.pageY + 16) + "px")
+                .style("left", (d3.event.pageX + 16) + "px");
+
+            }
+            var mouseleave = function(d) {
+                Tooltip
+                .style("opacity", 0)
+                d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 0.8)
+            }
+
+            svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", (d, i) => padding + i* ((w-2*padding)/275))
+                .attr("y", (d,i) => yScale(d[1])+padding)
+                .attr("width", 2)
+                .attr("height", (d, i) => h-yScale(d[1])-2*padding)
+                .attr("fill", "navy")
+                .attr("class", "bar")
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+             });
+
+        </script>
+    </body>
+</html>
