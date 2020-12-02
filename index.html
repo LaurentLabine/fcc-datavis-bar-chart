@@ -34,7 +34,7 @@
                 throw error;
             
             const dataset = data.data;
-
+            console.log(data.data)
             const svg = d3.select("body")
             .append("svg")
             .attr("id","SVG")
@@ -60,7 +60,7 @@
 
             const xScale = d3.scaleTime()
             .domain([minDate, maxDate])
-            .range([0, w-2*padding]);
+            .range([padding, w-padding]);
 
             const xAxis = d3.axisBottom(xScale)
             .ticks(5);
@@ -73,7 +73,7 @@
             .call(yAxis)
 
             svg.append("g")
-            .attr("transform", "translate(" + padding + "," + (h - padding) + ")")
+            .attr("transform", "translate(0," + (h - padding) + ")")
             .attr("id","x-axis")
             .call(xAxis);
 
@@ -101,7 +101,7 @@
             var mousemove = function(d) {
 
                 Tooltip
-                .html(d[1])
+                .html(d[0] + "<br>" +d[1])
                 .style("top", (d3.event.pageY + 16) + "px")
                 .style("left", (d3.event.pageX + 16) + "px");
 
@@ -118,7 +118,7 @@
                 .data(dataset)
                 .enter()
                 .append("rect")
-                .attr("x", (d, i) => padding + i* ((w-2*padding)/275))
+                .attr("x", (d, i) => padding + (i+1) * ((w-(2*padding))/275))
                 .attr("y", (d,i) => yScale(d[1])+padding)
                 .attr("width", 2)
                 .attr("height", (d, i) => h-yScale(d[1])-2*padding)
