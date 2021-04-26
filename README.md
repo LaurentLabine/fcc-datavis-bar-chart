@@ -1,6 +1,6 @@
 # freeCodeCamp Front End Development Libraries Projects - Project 1 - Visualize Data with a Bar Chart
 
-See the result here: https://laurentlabine.github.io/fcc-bar-chart/
+See the result here: https://laurentlabine.github.io/fcc-datavis-bar-chart/
 
 I built this project as part of freeCodeCamp's curriculum to learn and practice Data Visualization using D3.js library.
 
