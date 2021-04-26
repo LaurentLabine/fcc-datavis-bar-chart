@@ -69,11 +69,26 @@
                 .ticks(5);
 
             const yAxis = d3.axisLeft(yScale)
+            // .tickFormat(function (d) { return d / 1000 + "B" })
 
             svg.append("g")
                 .attr("transform", "translate(" + padding + ", " + (padding) + ")")
                 .attr("id", "y-axis")
                 .call(yAxis)
+
+            svg.append("text")      // text label for the x axis
+                .attr("x", 350)
+                .attr("y", 480)
+                .style("text-anchor", "middle")
+                .text("Data Source : http://www.bea.gov/national/pdf/nipaguid.pdf");
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0)
+                .attr("x", 0 - (h / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("GDP in Million of Dollars");
 
             svg.append("g")
                 .attr("transform", "translate(0," + (h - padding) + ")")
@@ -102,9 +117,23 @@
 
             }
             var mousemove = function (d) {
+                let date = new Date(d[0]);
+                let year = date.getFullYear()
+                let month = date.getMonth()
+                let tooltip = ""
 
+                console.log()
+                if (month <= 2) {
+                    tooltip = "Q1 " + year;
+                } else if (month <= 5) {
+                    tooltip = "Q2 " + year;
+                } else if (month <= 8) {
+                    tooltip = "Q3 " + year;
+                } else {
+                    tooltip = "Q4 " + year;
+                }
                 Tooltip
-                    .html(d[0] + "<br>" + d[1])
+                    .html(tooltip + "<br \>" + d[1] + "M$")
                     .style("top", (d3.event.pageY + 16) + "px")
                     .style("left", (d3.event.pageX + 16) + "px");
 
@@ -133,7 +162,6 @@
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
         });
-
     </script>
 </body>
 
